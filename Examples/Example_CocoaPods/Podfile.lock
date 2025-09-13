@@ -1,7 +1,7 @@
 PODS:
   - NFCPassportReader (1.1.9):
-    - OpenSSL-Universal (= 1.1.180)
-  - OpenSSL-Universal (1.1.180)
+    - OpenSSL-Universal (= 3.1.5001)
+  - OpenSSL-Universal (3.1.5001)
   - QKMRZParser (2.0.0)
   - QKMRZScanner (3.0.0):
     - QKMRZParser (~> 2.0.0)
