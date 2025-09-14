@@ -20,7 +20,9 @@ Pod::Spec.new do |spec|
   spec.dependency "OpenSSL-Universal", '3.1.5001'
   spec.xcconfig          = { 'OTHER_LDFLAGS' => '-weak_framework CryptoKit -weak_framework CoreNFC -weak_framework CryptoTokenKit' }
   spec.pod_target_xcconfig = {
-    'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'
+    'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES',
+    'SWIFT_OBJC_BRIDGING_HEADER' => '',
+    'SWIFT_INSTALL_OBJC_HEADER' => 'NO'
   }
 
 end
