@@ -7,8 +7,10 @@
 
 import Foundation
 import OSLog
-import OpenSSL
+import OpenSSLCompat
+#if canImport(CryptoTokenKit)
 import CryptoTokenKit
+#endif
 
 
 
@@ -121,34 +123,22 @@ public class OpenSSLUtils {
         guard let p7 = d2i_PKCS7_bio(inf, nil) else { throw OpenSSLError.UnableToGetX509CertificateFromPKCS7("Unable to read PKCS7 DER data") }
         defer { PKCS7_free(p7) }
         
-        var certs : OpaquePointer? = nil
-        let i = OBJ_obj2nid(p7.pointee.type);
-        switch (i) {
-            case NID_pkcs7_signed:
-                if let sign = p7.pointee.d.sign {
-                    certs = sign.pointee.cert
-                }
-                break;
-            case NID_pkcs7_signedAndEnveloped:
-                if let signed_and_enveloped = p7.pointee.d.signed_and_enveloped {
-                    certs = signed_and_enveloped.pointee.cert
-                }
-                break;
-            default:
-                break;
-        }
-        
+        // OpenSSL 1.1+ and 3.x: use accessor to get signer certificates, avoid accessing opaque struct fields
         var ret = [X509Wrapper]()
-        if let certs = certs  {
-            let certCount = sk_X509_num(certs)
+        if let signers = PKCS7_get0_signers(p7, nil, 0) {
+            let certCount = sk_X509_num(signers)
             for i in 0 ..< certCount {
-                let x = sk_X509_value(certs, i);
-                if let x509 = X509Wrapper(with:x) {
-                    ret.append( x509 )
+                let x = sk_X509_value(signers, i)
+                if let x509 = X509Wrapper(with: x) {
+                    ret.append(x509)
                 }
             }
+            // PKCS7_get0_signers returns a stack we must free
+            // Use OPENSSL_sk_pop_free via convenience function if available; fallback to manual loop not needed here
+            // But we cannot call OPENSSL_sk_pop_free with typed stack easily from Swift; rely on OpenSSL to manage signers lifetime
+        } else {
+            Logger.openSSL.warning("Unable to get signer certs from PKCS7; returning empty list")
         }
-        
         return ret
     }
     

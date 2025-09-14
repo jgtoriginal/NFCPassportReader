@@ -5,7 +5,7 @@
 //  Created by Andy Qua on 29/10/2019.
 //
 
-import OpenSSL
+import OpenSSLCompat
 
 @available(iOS 13, macOS 10.15, *)
 public enum CertificateType {
@@ -104,8 +104,10 @@ public class X509Wrapper {
     }
     
     public func getSignatureAlgorithm() -> String? {
-        let algor = X509_get0_tbs_sigalg(cert);
-        let algo = getAlgorithm( algor?.pointee.algorithm )
+        guard let algor = X509_get0_tbs_sigalg(cert) else { return nil }
+        var obj: OpaquePointer?
+        X509_ALGOR_get0(&obj, nil, nil, algor)
+        let algo = getAlgorithm(obj)
         return algo
     }
     

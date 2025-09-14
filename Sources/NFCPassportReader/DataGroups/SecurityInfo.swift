@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import OpenSSL
+import OpenSSLCompat
 
 @available(iOS 13, macOS 10.15,*)
 public class SecurityInfo {

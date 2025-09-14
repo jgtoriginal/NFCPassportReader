@@ -7,7 +7,7 @@
 
 import Foundation
 import OSLog
-import OpenSSL
+import OpenSSLCompat
 
 public enum PACEMappingType {
     case GM  // Generic Mapping

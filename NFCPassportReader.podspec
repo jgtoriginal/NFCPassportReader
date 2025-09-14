@@ -14,9 +14,13 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "Sources/**/*.{swift}"
 
-  spec.swift_version = "5.0"
+  spec.swift_version = "5.7"
 
+  # Prefer OpenSSL 3.x under CocoaPods as requested
   spec.dependency "OpenSSL-Universal", '3.1.5001'
   spec.xcconfig          = { 'OTHER_LDFLAGS' => '-weak_framework CryptoKit -weak_framework CoreNFC -weak_framework CryptoTokenKit' }
+  spec.pod_target_xcconfig = {
+    'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'
+  }
 
 end

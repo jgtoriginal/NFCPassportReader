@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import OpenSSL
+import OpenSSLCompat
 import NFCPassportReader
 
 // Currently not actual tests - maybe at some point but currently just a holding place for some testing stuff I didn't want to get rid of!

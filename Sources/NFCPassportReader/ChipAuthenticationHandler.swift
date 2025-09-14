@@ -7,7 +7,7 @@
 
 import Foundation
 import OSLog
-import OpenSSL
+import OpenSSLCompat
 
 #if !os(macOS)
 import CoreNFC
